@@ -40,8 +40,7 @@
 	<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pointage">Pointage</a></li>
-				<li><a href="#ar">Avance/Retard</a></li>
+				<li><a href="#pointage">P/A/R</a></li>
 				<li><a href="#moyenne">Moyenne</a></li>
 				<li><a href="#etalonnage">Etalonnage</a></li>
 				<li><a href="#cadenceur">Cadenceur</a></li>
@@ -75,28 +74,51 @@
 	</div><!-- /header -->
 	
 	<div data-role="content">	
-	
-		<div data-role="controlgroup" data-type="horizontal" data-mini="false">
-			<legend>Heure de départ </legend> 
-			<!-- <input type="text" data-role="date" name="pointage_heure_depart" id="pointage_heure_depart" value="" placeholder="Heure départ" />-->
-			<select name="pointage_heure_depart"></select>
-			<select name="pointage_minute_depart"></select>
-			<select name="pointage_seconde_depart"></select>
+		<div data-role="tabs" id="tabs">
+		  <div data-role="navbar">
+		    <ul>
+		      <li><a href="#tab_point" data-ajax="false" class="ui-btn-active">Pointage</a></li>
+		      <li><a href="#tab_ar" data-ajax="false">Avance/Retard</a></li>
+		    </ul>
+		  </div>
+		  <div id="tab_point" class="ui-body-d ui-content">
+			    <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<legend>Heure de départ </legend> 
+					<!-- <input type="text" data-role="date" name="pointage_heure_depart" id="pointage_heure_depart" value="" placeholder="Heure départ" />-->
+					<select name="pointage_heure_depart" class="hour"></select>
+					<select name="pointage_minute_depart" class="minute"></select>
+					<select name="pointage_seconde_depart" class="seconde"></select>
+					<input type="checkbox" name="pointage_demain" id="pointage_demain">
+        			<label for="pointage_demain">Demain</label>
+				</div>
+				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+					<legend>Temps imparti</legend> 
+					<select name="pointage_heure_temps" class="hour"></select>
+					<select name="pointage_minute_temps" class="minute"></select>
+					<select name="pointage_seconde_temps" class="seconde"></select>
+					
+				</div>   
+			    <input type="number" name="pointage_distance" id="pointage_distance" value="" placeholder="Distance en mètres" />
+				<div id="pointage_moyenne"></div>
+				<div id="pointage_heure_arrivee"></div>
+				<div id="pointage_temps_restant"></div>
 			
+		  </div>
+		  <div id="tab_ar">
+		      <input type="number" name="pointage_km_parcouru" id="pointage_km_parcouru" value="" placeholder="Distance parcourue en mètres" />
+			  <div id="pointage_etat_ar"></div>
+			  <div id="pointage_heure_arrivee2"></div>
+			  <div id="pointage_temps_restant2"></div>
+			
+		  </div>
 		</div>
-		    <input type="text" name="pointage_temps" id="pointage_temps" value="" placeholder="Temps imparti en minutes" />
-		    <input type="text" name="pointage_distance" id="pointage_distance" value="" placeholder="Distance en mètres" />
-			<div id="pointage_moyenne"></div>
-			<div id="pointage_heure_arrivee"></div>
-			<div id="pointage_temps_restant"></div>
 		
 
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">
 			<ul>
-				<li><a href="#pointage" class="ui-btn-active ui-state-persist">Pointage</a></li>
-				<li><a href="#ar">Avance/Retard</a></li>
+				<li><a href="#pointage" class="ui-btn-active ui-state-persist">P/A/R</a></li>
 				<li><a href="#moyenne">Moyenne</a></li>
 				<li><a href="#etalonnage">Etalonnage</a></li>
 				<li><a href="#cadenceur">Cadenceur</a></li>

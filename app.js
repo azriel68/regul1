@@ -18,24 +18,62 @@ $(document).ready(function() {
 	});
 	
     for(i=0;i<24;i++) {
-    	$('select[name=pointage_heure_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'h</option>');
+    	$('select.hour').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'h</option>');
     }  
     for(i=0;i<60;i++) {
-    	$('select[name=pointage_minute_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'m</option>');
-    	$('select[name=pointage_seconde_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'s</option>');
+    	$('select.minute').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'m</option>');
+    	$('select.seconde').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'s</option>');
     }  
       
-    $('select[name=pointage_heure_depart],select[name=pointage_minute_depart],select[name=pointage_seconde_depart],input[name=pointage_temps],input[name=pointage_distance]').change(function() {
+    $("#pointage_km_parcouru").change(function() {
     	
     	var m = $('input[name=pointage_distance]').val();
-    	var t = $('input[name=pointage_temps]').val();
+ 		var t = parseInt($('select[name=pointage_heure_temps]').val() * 60) + parseInt($('select[name=pointage_minute_temps]').val()) + parseFloat($('select[name=pointage_seconde_temps]').val() / 60) ;
+   
+		var km = $(this).val();
+		
+		var coef = km / m;
+
+    	var dCur = new Date();
+    	
+    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
+		if( $("#pointage_demain").is(":checked") )dStart.setDate(dStart.getDate()+1);
+		var dEnd = addMinutes(dStart, t);
+		
+		var dRest = new Date(dEnd.getTime() - dCur.getTime());
+    	
+		var dTarget = addMinutes( dStart, t * coef );    	
+		var dDiffTarget = dCur.getTime() - dTarget.getTime();
+    	
+    	diff = dateDiff(dTarget,dCur);
+		
+		if(diff.min>0) {
+			$('#pointage_etat_ar').html(diff.min+'min '+ diff.sec+'sec');
+			$('#pointage_etat_ar').css({
+				color:'red'
+			});	
+		}
+		else{
+			$('#pointage_etat_ar').html(diff.min+'min '+ Math.abs(diff.sec)+'sec');
+
+			$('#pointage_etat_ar').css({
+				color:'green'
+			});	
+
+		}
+				    	
+    }) ; 
+      
+    $('select.hour,select.minute,select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
+    	
+    	var m = $('input[name=pointage_distance]').val();
+    	
+    	var t = parseInt($('select[name=pointage_heure_temps]').val() * 60) + parseInt($('select[name=pointage_minute_temps]').val()) + parseFloat($('select[name=pointage_seconde_temps]').val() / 60) ;
     	
     	var dCur = new Date();
     	
     	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
-
-		if(dStart<dCur)dStart.setDate(dStart.getDate()+1);
-
+		if( $("#pointage_demain").is(":checked") )dStart.setDate(dStart.getDate()+1);
 		var dEnd = addMinutes(dStart, t);
 		
 		var moyenne = getMoyenne(m, t);
@@ -43,15 +81,21 @@ $(document).ready(function() {
     	var dRest = new Date(dEnd.getTime() - dCur.getTime());
     	
 	
-    	$('#pointage_temps_restant').countdown('destroy');
+    	$('#pointage_temps_restant,#pointage_temps_restant2').countdown('destroy');
     	$('#pointage_temps_restant').countdown({
     		until: dStart
     		, compact: true
     		, description: ' avant le départ'
     	});
     	
+    	$('#pointage_temps_restant2').countdown({
+    		until: dEnd
+    		, compact: true
+    		, description: ' avant arrivée'
+    	});
+    	
     	$('#pointage_moyenne').html('Moyenne '+moyenne+'km/h');
-    	$('#pointage_heure_arrivee').html("Heure d'arrivée "+dEnd.toString().substr(16,8) );
+    	$('#pointage_heure_arrivee,#pointage_heure_arrivee2').html("Arrivée "+dEnd.toString().substr(16,8) );
 		
 	
     	
@@ -60,8 +104,23 @@ $(document).ready(function() {
     });   
 });
 
-function tempsRestantDecompte() {
-	
+function dateDiff(date1, date2){
+    var diff = {};                           // Initialisation du retour
+    var tmp = date2 - date1;
+ 
+    tmp = Math.floor(tmp/1000);             // Nombre de secondes entre les 2 dates
+    diff.sec = tmp % 60;                    // Extraction du nombre de secondes
+ 
+    tmp = Math.floor((tmp-diff.sec)/60);    // Nombre de minutes (partie entière)
+    diff.min = tmp % 60;                    // Extraction du nombre de minutes
+ 
+    tmp = Math.floor((tmp-diff.min)/60);    // Nombre d'heures (entières)
+    diff.hour = tmp % 24;                   // Extraction du nombre d'heures
+     
+    tmp = Math.floor((tmp-diff.hour)/24);   // Nombre de jours restants
+    diff.day = tmp;
+     
+    return diff;
 }
 
 function getMoyenne(distance, duree) {
