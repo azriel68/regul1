@@ -34,15 +34,28 @@ $(document).ready(function() {
     	
     	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
 
+		if(dStart<dCur)dStart.setDate(dStart.getDate()+1);
+
 		var dEnd = addMinutes(dStart, t);
 		
 		var moyenne = getMoyenne(m, t);
     	
     	var dRest = new Date(dEnd.getTime() - dCur.getTime());
     	
-    	$('#pointage_moyenne').html('Moyenne : '+moyenne+'km/h');
-    	$('#pointage_heure_arrivee').html("Heure d'arrivée : "+dEnd.toString().substr(16,8) );
-    	$('#pointage_temps_restant').html("Temps restant : "+dRest.toString().substr(16,8) );
+	
+    	$('#pointage_temps_restant').countdown('destroy');
+    	$('#pointage_temps_restant').countdown({
+    		until: dStart
+    		, compact: true
+    		, description: ' avant le départ'
+    	});
+    	
+    	$('#pointage_moyenne').html('Moyenne '+moyenne+'km/h');
+    	$('#pointage_heure_arrivee').html("Heure d'arrivée "+dEnd.toString().substr(16,8) );
+		
+	
+    	
+    	//$('#pointage_temps_restant').html("Temps restant "+dRest.toString().substr(16,8) );
     	
     });   
 });
