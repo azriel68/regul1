@@ -6,6 +6,7 @@
 	
 		<title>RegulOne</title>
 		<link rel="stylesheet" href="jq/jquery.mobile-1.4.3.min.css" type="text/css" />
+		<link rel="stylesheet" href="style1.css" type="text/css" />
 	
 		<script src="jq/jquery.min.js" type="text/javascript"></script>
 		<script src="jq/jquery.mobile-1.4.3.min.js" type="text/javascript"></script>
@@ -52,23 +53,11 @@
 		<a href="javascript:saveConfig();" data-icon="check">Save</a>
 	</div><!-- /header -->
 	<div data-role="content">	
-		<div data-role="fieldcontain">
-			<label for="interface_url">Interface url :</label>
-		 	<input type="text" name="interface_url" id="interface_url" value="" />
-		</div>
-		<div data-role="fieldcontain">
-			<label for="dolibarr_login">Dolibarr Login :</label>
-			<input type="text" name="dolibarr_login" id="dolibarr_login" value="" />
-		</div>
 		
-		<div data-role="fieldcontain">
-			<label for="dolibarr_password">Dolibarr password :</label>
-		 	<input type="password" name="dolibarr_password" id="dolibarr_password" value="" />
-		</div>
 		
 	</div>
 	<div data-role="footer" class="ui-bar">
-			<a href="javascript:dolibarr.indexedDB.clear();" data-role="button">Clear Database</a>
+			<a href="javascript:regul.indexedDB.clear();" data-role="button">Clear Database</a>
 	</div>
 	
 </div>
@@ -78,20 +67,24 @@
 		<a href="#home" data-icon="back">Accueil</a>
 		<h1>Pointage</h1>
 	</div><!-- /header -->
+	
 	<div data-role="content">	
-		    <label for="pointage_heure_depart">Heure départ</label>
-		    <input type="text" data-role="date" name="pointage_heure_depart" id="pointage_heure_depart" value="">
-		    <label for="pointage_temps">Temps imparti</label>
-		    <input type="text" name="pointage_temps" id="pointage_temps" value="">
-		    <label for="pointage_distance">Distance</label>
-		    <input type="text" name="pointage_distance" id="pointage_distance" value="">
+	
+		<div data-role="controlgroup" data-type="horizontal" data-mini="false">
+			<legend>Heure de départ </legend> 
+			<!-- <input type="text" data-role="date" name="pointage_heure_depart" id="pointage_heure_depart" value="" placeholder="Heure départ" />-->
+			<select name="pointage_heure_depart"></select>
+			<select name="pointage_minute_depart"></select>
+			<select name="pointage_seconde_depart"></select>
+			
+		</div>
+		    <input type="text" name="pointage_temps" id="pointage_temps" value="" placeholder="Temps imparti en minutes" />
+		    <input type="text" name="pointage_distance" id="pointage_distance" value="" placeholder="Distance en mètres" />
+			<div id="pointage_moyenne"></div>
+			<div id="pointage_heure_arrivee"></div>
+			<div id="pointage_temps_restant"></div>
 		
-			<label for="pointage_heure_arrivee">Heure arrivée</label>
-		    <input type="text" readonly="readonly" name="pointage_heure_arrivee" id="pointage_heure_arrivee" value="">
-		    <label for="pointage_temps_restant">Temps restant</label>
-		    <input type="text" readonly="readonly" name="pointage_temps_restant" id="pointage_temps_restant" value="">
 
-				
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">

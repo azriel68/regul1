@@ -1,14 +1,14 @@
 
 
 
-var dolibarr = {};
-TProduct = new Array;
-TThirdParty = new Array;
-
+var regul = {};
 
 $(document).ready(function() {
-    dolibarr.indexedDB.db = null;
-    dolibarr.indexedDB.open();
+	
+	
+	
+    regul.indexedDB.db = null;
+    regul.indexedDB.open();
   
  	$('#config').page({
 		create:function(event,ui) {
@@ -17,8 +17,65 @@ $(document).ready(function() {
 		}
 	});
 	
-        
+    for(i=0;i<24;i++) {
+    	$('select[name=pointage_heure_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'h</option>');
+    }  
+    for(i=0;i<60;i++) {
+    	$('select[name=pointage_minute_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'m</option>');
+    	$('select[name=pointage_seconde_depart]').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'s</option>');
+    }  
+      
+    $('select[name=pointage_heure_depart],select[name=pointage_minute_depart],select[name=pointage_seconde_depart],input[name=pointage_temps],input[name=pointage_distance]').change(function() {
+    	
+    	var m = $('input[name=pointage_distance]').val();
+    	var t = $('input[name=pointage_temps]').val();
+    	
+    	var dCur = new Date();
+    	
+    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
+
+		var dEnd = addMinutes(dStart, t);
+		
+		var moyenne = getMoyenne(m, t);
+    	
+    	var dRest = new Date(dEnd.getTime() - dCur.getTime());
+    	
+    	$('#pointage_moyenne').html('Moyenne : '+moyenne+'km/h');
+    	$('#pointage_heure_arrivee').html("Heure d'arrivée : "+dEnd.toString().substr(16,8) );
+    	$('#pointage_temps_restant').html("Temps restant : "+dRest.toString().substr(16,8) );
+    	
+    });   
 });
+
+function tempsRestantDecompte() {
+	
+}
+
+function getMoyenne(distance, duree) {
+	// distance en mètre, durée en minute
+	
+	km = distance / 1000;
+	h = duree / 60;
+	moy = km / h;
+	
+	return Math.round( moy * 100 ) / 100;
+	
+}
+
+function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
+
+function pad_with_zeroes(number, length) {
+
+    var my_string = '' + number;
+    while (my_string.length < length) {
+        my_string = '0' + my_string;
+    }
+
+    return my_string;
+
+}
 
 
 function saveConfig() {
@@ -39,160 +96,6 @@ function saveConfig() {
 	
 }
 
-function syncronize() {
-	
-	$('#syncronize-page .sync-info').html('');
-	$.mobile.changePage('#syncronize-page');
-	
-	$('#syncronize-page .sync-info').append('Fetching products... ');
-	_sync_product();
-	$('#syncronize-page .sync-info').append('Done<br />');
-	
-	$('#syncronize-page .sync-info').append('Fetching thirdparties... ');
-	_sync_thirdparty();
-	$('#syncronize-page .sync-info').append('Done<br />');
-	
-	$.mobile.loading( "hide" );
-	
-}
-
-function _sync_product() {
-  var date_last_sync_product = 0;
-  if(localStorage.date_last_sync_product){  date_last_sync_product = localStorage.date_last_sync_product; }
-	
-  $.ajax({
-  	url : 	localStorage.interface_url
-  	,data : {
-  		get:'product'
-  		,jsonp: 1
-  		,date_last_sync : date_last_sync_product
-  	}
-  	,dataType:'jsonp'
-  	,async : false
-  })
-  .done(function(data) {
-
-	  	localStorage.date_last_sync_product = $.now(); 
-	  	
-	  	$.each(data, function(i, item) {
-	  		
-	  		var find = false;
-	  		for(x in TProduct){
-	  			
-	  			if(TProduct[x].id == item.id) {
-	  				TProduct[x] = item;
-	  				find = true;
-	  			
-	  			}
-	  		}
-	  		
-	  		if(!find) TProduct.push(item);
-	  		
-	  		
-	  	});
-	  	
-	  	_synchronize_local_product();
-		refreshproductList();
-  })
-  .fail(function() {
-  		
-  		alert("I think youre are not connected to internet, am i right ?");
-  	
-  });
-  
-  
-  return TProduct;
-  
-}
-function _synchronize_local_product(tx) {
-	for(x in TProduct) {
-		item = TProduct[x];
-		
-		dolibarr.indexedDB.addProduct(item);
-	}
-	
-	
-}
-function _synchronize_local_thirdparty(tx) {
-	for(x in TThirdParty) {
-		item = TThirdParty[x];
-		
-		dolibarr.indexedDB.addThirdparty(item);
-	}
-	
-}
-
-function _sync_thirdparty() {
-  var date_last_sync_thirdparty = 0;
-  if(localStorage.date_last_sync_thirdparty){  date_last_sync_thirdparty = localStorage.date_last_sync_thirdparty; }
-
-  $.ajax({
-  	url : 	localStorage.interface_url
-  	,data : {
-  		get:'thirdparty'
-  		,jsonp: 1
-  		,date_last_sync : date_last_sync_thirdparty
-  	}
-  	,dataType:'jsonp'
-  	,async : false
-  }).done(function(data) {
-
-	  	localStorage.date_last_sync_thirdparty = $.now(); 
-	  	
-	  	$.each(data, function(i, item) {
-	  		var find = false;
-	  		for(x in TThirdParty){
-	  			
-	  			if(TThirdParty[x].id == item.id) {
-	  				TThirdParty[x] = item;
-	  				find = true;
-	  			}
-	  		}
-	  		
-	  		if(!find) TThirdParty.push(item);
-	  	});
-	 	  	
-	  	_synchronize_local_thirdparty();
-		refreshthirdpartyList();
-  })
-  
-  
-  
-  return TThirdParty;
-  
-}
-function refreshthirdpartyList() {
-	$('#thirdparty-list ul').empty();
-	$.each(TThirdParty,function(i, item) {
-		$('#thirdparty-list ul').append('<li><a href="#thirdparty-card" itemid="'+item.rowid+'">'+item.nom+'</a></li>');
-		
-	});
-	
-	if ($('#thirdparty-list ul').hasClass('ui-listview')) {
-		    $('#thirdparty-list ul').listview('refresh');
-	} else {
-	    $('#thirdparty-list ul').listview();
-	}
-	
-}
-function refreshproductList() {
-	
-	$('#product-list ul').empty();
-	$.each(TProduct,function(i, item) {
-		
-		$('#product-list ul').append('<li><a href="javascript:dolibarr.indexedDB.getItem(\'product\', '+item.id+', showProduct)">'+item.label+'</a></li>');
-		
-	});
-	
-	if ($('#product-list ul').hasClass('ui-listview')) {
-		    $('#product-list ul').listview('refresh');
-	} else {
-	    $('#product-list ul').listview();
-	}
-	
-	
-}
-
 function setItemInHTML($container, item) {
 	
 	for(x in item) {
@@ -204,9 +107,4 @@ function setItemInHTML($container, item) {
 	}
 	
 }
-function showProduct(item) {
-	
-	setItemInHTML($('#product-card'), item);
-	
-	$.mobile.changePage('#product-card');
-}
+

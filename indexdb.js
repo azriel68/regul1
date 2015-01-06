@@ -1,14 +1,13 @@
-dolibarr.indexedDB = {};
+regul.indexedDB = {};
 
-dolibarr.indexedDB.open = function() {
+regul.indexedDB.open = function() {
 	
   var version = 7;
-  var request = indexedDB.open("dolibarr", version);
+  var request = indexedDB.open("regul", version);
 
   request.onsuccess = function(e) {
-  	dolibarr.indexedDB.db = e.target.result;
-   	dolibarr.indexedDB.getAllProduct();
-   	dolibarr.indexedDB.getAllThirdparty();
+  	regul.indexedDB.db = e.target.result;
+   
   };
  
   request.onupgradeneeded = function (evt) { 
@@ -27,13 +26,13 @@ dolibarr.indexedDB.open = function() {
         
    };
 
-  request.onerror = dolibarr.indexedDB.onerror;
+  request.onerror = regul.indexedDB.onerror;
  
 };
 
 
-dolibarr.indexedDB.addProduct = function(item) {
-  var db = dolibarr.indexedDB.db;
+regul.indexedDB.addProduct = function(item) {
+  var db = regul.indexedDB.db;
   var trans = db.transaction(["product"], "readwrite");
   var store = trans.objectStore("product");
   store.delete(item.id);
@@ -47,27 +46,10 @@ dolibarr.indexedDB.addProduct = function(item) {
     console.log(e.value);
   };
 };
-dolibarr.indexedDB.addThirdparty = function(item) {
-  var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["societe"], "readwrite");
-  var store = trans.objectStore("societe");
-  
-  store.delete(item.id);
-  
-  var request = store.put(item);
 
-  trans.oncomplete = function(e) {
-   
-  };
-
-  request.onerror = function(e) {
-    console.log(e.value);
-  };
-};
-
-dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
+regul.indexedDB.getItem = function (storename, id, callbackfct) {
 	
-	  var db = dolibarr.indexedDB.db;
+	  var db = regul.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
 	 
@@ -86,80 +68,12 @@ dolibarr.indexedDB.getItem = function (storename, id, callbackfct) {
 	
 };
 
-dolibarr.indexedDB.getAllProduct = function() {
-  
-  var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["product"], "readwrite");
-  var store = trans.objectStore("product");
 
-  // Get everything in the store;
-  var keyRange = IDBKeyRange.lowerBound(0);
-  var cursorRequest = store.openCursor(keyRange);
-
-  cursorRequest.onsuccess = function(e) {
-    var result = e.target.result;
-    if(result) {
-		TProduct.push(result.value);
-		
-	    //renderTodo(result.value);
-	    result.continue();
-    	
-    }
-    else{
-    	
-    	refreshproductList();
-    }
-      
-	
-  };
-
-  cursorRequest.oncomplete = function() {
-  	
-  	
-  };
-
-  cursorRequest.onerror = dolibarr.indexedDB.onerror;
-};
-
-
-dolibarr.indexedDB.getAllThirdparty = function() {
-  
-  var db = dolibarr.indexedDB.db;
-  var trans = db.transaction(["societe"], "readwrite");
-  var store = trans.objectStore("societe");
-
-  // Get everything in the store;
-  var keyRange = IDBKeyRange.lowerBound(0);
-  var cursorRequest = store.openCursor(keyRange);
-
-  cursorRequest.onsuccess = function(e) {
-    var result = e.target.result;
-    if(result) {
-		TThirdParty.push(result.value);
-		result.continue();
-    	
-    }
-    else{
-    	
-    	refreshthirdpartyList();
-    }
-      
-	
-  };
-
-  cursorRequest.oncomplete = function() {
-  	
-  	
-  };
-
-  cursorRequest.onerror = dolibarr.indexedDB.onerror;
-};
-
-dolibarr.indexedDB.clear=function() {
-		var db = dolibarr.indexedDB.db;
+regul.indexedDB.clear=function() {
+		var db = regul.indexedDB.db;
 		db.close();
 		
-  		var req = indexedDB.deleteDatabase("dolibarr");
+  		var req = indexedDB.deleteDatabase("regul");
 		req.onsuccess = function () {
 		    console.log("Deleted database successfully");
 		};
