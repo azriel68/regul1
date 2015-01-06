@@ -64,7 +64,16 @@ $(document).ready(function() {
 				    	
     }) ; 
       
-    $('select.hour,select.minute,select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
+    $("#moyenne select.hour,#moyenne select.minute,#moyenne select.seconde").change(function(){
+    	var t = parseInt($('select[name=moyenne_heure_temps]').val() * 60) + parseInt($('select[name=moyenne_minute_temps]').val()) + parseFloat($('select[name=moyenne_seconde_temps]').val() / 60) ;
+    	var d = $('input[name=moyenne_distance]').val();
+    	var m = $('input[name=moyenne_moyenne]').val();
+    	
+    	
+    	
+    });
+      
+    $('#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
     	
     	var m = $('input[name=pointage_distance]').val();
     	

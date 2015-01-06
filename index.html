@@ -129,6 +129,53 @@
 	</div><!-- /footer -->
 	
 </div>
+<div id="moyenne" data-role="page">
+
+	<div data-role="header">
+		<a href="#home" data-icon="back">Accueil</a>
+		<h1>Moyenne</h1>
+	</div><!-- /header -->
+	
+	<div data-role="content">	
+				<div data-role="controlgroup" data-type="horizontal" data-mini="false">
+					<legend>Temps imparti</legend> 
+					<select name="moyenne_heure_temps" class="hour"></select>
+					<select name="moyenne_minute_temps" class="minute"></select>
+					<select name="moyenne_seconde_temps" class="seconde"></select>
+					
+				</div>   
+				<div data-role="controlgroup"> 
+					<input type="number" name="moyenne_distance" id="moyenne_distance" value="" placeholder="Distance en mètres" />
+					<input type="number" name="moyenne_moyenne" id="moyenne_moyenne" value="" placeholder="Moyenne en km/h" />
+				</div>
+			
+			    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="false">
+			        <legend>Qu'est-ce qu'on calcul ?</legend>
+			        <input type="radio" name="moyenne-type" id="moyenne-type-a" value="moyenne" checked="checked" />
+			        <label for="moyenne-type-a">Moyenne</label>
+			        <input type="radio" name="moyenne-type" id="moyenne-type-b" value="distance" />
+			        <label for="moyenne-type-b">Distance</label>
+			        <input type="radio" name="moyenne-type" id="moyenne-type-c" value="temps" />
+			        <label for="moyenne-type-c">Heure</label>
+			
+			    </fieldset>
+
+				    
+	</div>
+	<div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#pointage">P/A/R</a></li>
+				<li><a href="#moyenne" class="ui-btn-active ui-state-persist">Moyenne</a></li>
+				<li><a href="#etalonnage">Etalonnage</a></li>
+				<li><a href="#cadenceur">Cadenceur</a></li>
+				
+			</ul>
+		</div><!-- /navbar -->
+
+	</div><!-- /footer -->
+	
+</div>
 
 </body>
 </html>
