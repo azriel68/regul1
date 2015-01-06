@@ -64,6 +64,20 @@ $(document).ready(function() {
 				    	
     }) ; 
       
+    $("#etalonnage input[name=indice], #etalonnage input[name=zone], #etalonnage input[name=mesure]").change(function() {
+    	
+    	var i = $('#etalonnage input[name=indice]').val();
+    	var z = $('#etalonnage input[name=zone]').val();
+    	var m = $('#etalonnage input[name=mesure]').val();
+   		
+   		var coef = z / m;
+   		
+   		res = Math.round( i * coef * 100 ) / 100;
+   		
+   		$("#etalonnage_indice").html("Indice "+res); 	
+    	
+    }) ;
+      
     $("#moyenne select.hour,#moyenne select.minute,#moyenne select.seconde").change(function(){
     	var t = parseInt($('select[name=moyenne_heure_temps]').val() * 60) + parseInt($('select[name=moyenne_minute_temps]').val()) + parseFloat($('select[name=moyenne_seconde_temps]').val() / 60) ;
     	var d = $('input[name=moyenne_distance]').val();
