@@ -1,6 +1,6 @@
 
 
-
+var TSpeciale={};
 var regul = {};
 
 $(document).ready(function() {
@@ -24,6 +24,11 @@ $(document).ready(function() {
     	$('select.minute').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'m</option>');
     	$('select.seconde').append('<option value="'+i+'">'+pad_with_zeroes(i,2)+'s</option>');
     }  
+      
+    $("#pointage_distance_km").change(function() {
+    	$("#pointage_distance").val( $(this).val() * 1000 );
+    	$("#pointage_distance").change();
+    });
       
     $("#pointage_km_parcouru").change(function() {
     	
@@ -87,15 +92,23 @@ $(document).ready(function() {
     	
     });
       
-    $('#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
+    $('input[name=pointage_depart],#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
+    	
     	
     	var m = $('input[name=pointage_distance]').val();
+    	$("#pointage_distance_km").val( m / 1000 );
     	
-    	var t = parseInt($('select[name=pointage_heure_temps]').val() * 60) + parseInt($('select[name=pointage_minute_temps]').val()) + parseFloat($('select[name=pointage_seconde_temps]').val() / 60) ;
+		var hDepart = $('input[name=pointage_depart]').val();
+    	var THDepart = hDepart.split(":");
+
+		var temps = $('input[name=pointage_temps]').val();
+    	var TTemps  = temps.split(":");
+
+    	var t = parseInt(TTemps[0] ) * 60 + parseInt(TTemps[1]) + parseFloat(TTemps[2])/ 60 ;
     	
     	var dCur = new Date();
     	
-    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
+    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , THDepart[0], THDepart[1], THDepart[2], 0 );
 		if( $("#pointage_demain").is(":checked") )dStart.setDate(dStart.getDate()+1);
 		var dEnd = addMinutes(dStart, t);
 		
@@ -123,9 +136,28 @@ $(document).ready(function() {
 	
     	
     	//$('#pointage_temps_restant').html("Temps restant "+dRest.toString().substr(16,8) );
-    	
+  
+  		regul.indexedDB.getAll('speciale', TSpeciale, 'loadListeSpeciale');  	
+    	;
     });   
 });
+
+function loadListeSpeciale() {
+	
+	$('#thirdparty-list ul li.speciale').remove();
+	$.each(TThirdParty,function(i, item) {
+		$('ul#listeSpeciale').prepend('<li><a href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
+	});
+	
+	if ($('ul#listeSpeciale').hasClass('ui-listview')) {
+		    $('ul#listeSpeciale').listview('refresh');
+	} else {
+	    $('ul#listeSpeciale').listview();
+	}
+	
+	
+	
+}
 
 function dateDiff(date1, date2){
     var diff = {};                           // Initialisation du retour

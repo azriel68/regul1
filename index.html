@@ -31,11 +31,12 @@
 	</div><!-- /header -->
 	<div data-role="content">	
 		<h3>Spéciales programmées</h3>
-		<ul data-role="listview" data-inset="false">
-			<li><a href="#product-list">SP1</a></li>	
-			<li><a href="#propal-list">SP2</a></li>	
+		<ul id="listeSpeciale" data-role="listview" data-inset="false">
+				
+			<li><a href="#speciale">Nouvelle spéciale</a></li>	
 			
 		</ul>
+		
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">
@@ -44,6 +45,7 @@
 				<li><a href="#moyenne">Moyenne</a></li>
 				<li><a href="#etalonnage">Etalonnage</a></li>
 				<li><a href="#cadenceur">Cadenceur</a></li>
+				<li><a href="#config">Options</a></li>
 				
 			</ul>
 		</div><!-- /navbar -->
@@ -55,7 +57,7 @@
 	<div data-role="header">
 		<a href="#home" data-icon="back" data-rel="back">Home</a>
 		<h1>Config</h1>
-		<a href="javascript:saveConfig();" data-icon="check">Save</a>
+		<!-- <a href="javascript:saveConfig();" data-icon="check">Save</a> -->
 	</div><!-- /header -->
 	<div data-role="content">	
 		
@@ -82,24 +84,42 @@
 		    </ul>
 		  </div>
 		  <div id="tab_point" class="ui-body-d ui-content">
-			    <div data-role="controlgroup" data-type="horizontal" data-mini="true">
-					<legend>Heure de départ </legend> 
-					<!-- <input type="text" data-role="date" name="pointage_heure_depart" id="pointage_heure_depart" value="" placeholder="Heure départ" />-->
-					<select name="pointage_heure_depart" class="hour"></select>
+			    <div class="ui-grid-a">
+			    		<legend>Heure de départ </legend>
+						<div class="ui-block-a">
+							<input type="time" step="1" name="pointage_depart" id="pointage_depart" placeholder="Heure départ" />
+						</div>
+					<!--<select name="pointage_heure_depart" class="hour"></select>
 					<select name="pointage_minute_depart" class="minute"></select>
-					<select name="pointage_seconde_depart" class="seconde"></select>
-					<input type="checkbox" name="pointage_demain" id="pointage_demain">
-        			<label for="pointage_demain">Demain</label>
+					<select name="pointage_seconde_depart" class="seconde"></select>-->
+						<div class="ui-block-b" data-mini="true">
+							<input type="checkbox" name="pointage_demain" id="pointage_demain">
+        					<label for="pointage_demain">Demain</label>
+        				</div>
+    					<div class="ui-block-a">
+							<legend>Temps imparti</legend> 
+							<input type="time" step="1" name="pointage_temps" id="pointage_temps" placeholder="Temps impartis" />
+						</div>
 				</div>
-				<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+				<!-- <div data-role="controlgroup" data-type="horizontal" data-mini="true">
 					<legend>Temps imparti</legend> 
 					<select name="pointage_heure_temps" class="hour"></select>
 					<select name="pointage_minute_temps" class="minute"></select>
 					<select name="pointage_seconde_temps" class="seconde"></select>
 					
-				</div>   
-			    <input type="number" name="pointage_distance" id="pointage_distance" value="" placeholder="Distance en mètres" />
-				<div id="pointage_moyenne"></div>
+				</div> -->
+					
+				   
+				<div class="ui-grid-a">
+					<div class="ui-block-a">
+						<input type="number" name="pointage_distance_km" id="pointage_distance_km" value="" placeholder="Distance en km" />
+					</div> 
+					<div class="ui-block-b">
+						<input type="number" name="pointage_distance" id="pointage_distance" value="" placeholder="En mètres" />
+					</div>				
+				</div>
+				
+			    <div id="pointage_moyenne"></div>
 				<div id="pointage_heure_arrivee"></div>
 				<div id="pointage_temps_restant"></div>
 			

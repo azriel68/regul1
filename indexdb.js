@@ -2,7 +2,7 @@ regul.indexedDB = {};
 
 regul.indexedDB.open = function() {
 	
-  var version = 7;
+  var version = 1;
   var request = indexedDB.open("regul", version);
 
   request.onsuccess = function(e) {
@@ -13,17 +13,12 @@ regul.indexedDB.open = function() {
   request.onupgradeneeded = function (evt) { 
   		var db = evt.currentTarget.result;
   		        
-        var objectStore = db.createObjectStore("product", 
+        var objectStore = db.createObjectStore("speciale", 
                                      { keyPath: "id", autoIncrement: true });
  
         objectStore.createIndex("id", "id", { unique: true });
         objectStore.createIndex("label", "label", { unique: false });
-        
-        var objectStore = db.createObjectStore("societe", 
-                                     { keyPath: "id", autoIncrement: true });
- 
-        objectStore.createIndex("id", "id", { unique: true });
-        
+               
    };
 
   request.onerror = regul.indexedDB.onerror;
@@ -31,10 +26,43 @@ regul.indexedDB.open = function() {
 };
 
 
-regul.indexedDB.addProduct = function(item) {
+regul.indexedDB.getAll= function(storename, TArray, callback) {
+  
   var db = regul.indexedDB.db;
-  var trans = db.transaction(["product"], "readwrite");
-  var store = trans.objectStore("product");
+  var trans = db.transaction(storename, "readwrite");
+  var store = trans.objectStore(storename);
+
+  // Get everything in the store;
+  var keyRange = IDBKeyRange.lowerBound(0);
+  var cursorRequest = store.openCursor(keyRange);
+
+  cursorRequest.onsuccess = function(e) {
+    var result = e.target.result;
+    if(result) {
+		TArray.push(result.value);
+		result.continue();
+    	
+    }
+    else{
+    	
+    	callback();
+    }
+      
+	
+  };
+
+  cursorRequest.oncomplete = function() {
+  	
+  	
+  };
+
+  cursorRequest.onerror = regul.indexedDB.onerror;
+};
+
+regul.indexedDB.addItem = function(storename,item) {
+  var db = regul.indexedDB.db;
+  var trans = db.transaction(storename, "readwrite");
+  var store = trans.objectStore(storename);
   store.delete(item.id);
   var request = store.put(item);
 
@@ -52,7 +80,6 @@ regul.indexedDB.getItem = function (storename, id, callbackfct) {
 	  var db = regul.indexedDB.db;
 	  var trans = db.transaction(storename, "readwrite");
 	  var store = trans.objectStore(storename);
-	 
 	 
 	  var request = store.get(id.toString()); 
 	  request.onsuccess = function() {
