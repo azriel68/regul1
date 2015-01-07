@@ -30,18 +30,34 @@ $(document).ready(function() {
     	$("#pointage_distance").change();
     });
       
+    $("#pointage_km_parcouru_km").change(function() {
+    	$("#pointage_km_parcouru").val( $(this).val() * 1000 );
+    	$("#pointage_km_parcouru").change();
+    });
+      
+      
+      
     $("#pointage_km_parcouru").change(function() {
     	
     	var m = $('input[name=pointage_distance]').val();
- 		var t = parseInt($('select[name=pointage_heure_temps]').val() * 60) + parseInt($('select[name=pointage_minute_temps]').val()) + parseFloat($('select[name=pointage_seconde_temps]').val() / 60) ;
-   
+
+		var temps = $('input[name=pointage_temps]').val();
+    	var TTemps  = temps.split(":");
+    	if(TTemps.length<3)TTemps[2] = 0;
+    	
+    	var t = parseInt(TTemps[0] ) * 60 + parseInt(TTemps[1]) + parseFloat(TTemps[2])/ 60 ;
+    	   
 		var km = $(this).val();
 		
 		var coef = km / m;
 
+    	var hDepart = $('input[name=pointage_depart]').val();
+    	var THDepart = hDepart.split(":");
+		if(THDepart.length<3)THDepart[2] = 0;
+
     	var dCur = new Date();
     	
-    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , $('select[name=pointage_heure_depart]').val(), $('select[name=pointage_minute_depart]').val(), $('select[name=pointage_seconde_depart]').val(), 0 );
+    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , parseInt(THDepart[0]), parseInt(THDepart[1]), parseInt(THDepart[2]), 0 );
 		if( $("#pointage_demain").is(":checked") )dStart.setDate(dStart.getDate()+1);
 		var dEnd = addMinutes(dStart, t);
 		
@@ -100,15 +116,17 @@ $(document).ready(function() {
     	
 		var hDepart = $('input[name=pointage_depart]').val();
     	var THDepart = hDepart.split(":");
-
+		if(THDepart.length<3)THDepart[2] = 0;
+		
 		var temps = $('input[name=pointage_temps]').val();
     	var TTemps  = temps.split(":");
+		if(TTemps.length<3)TTemps[2] = 0;
 
-    	var t = parseInt(TTemps[0] ) * 60 + parseInt(TTemps[1]) + parseFloat(TTemps[2])/ 60 ;
+    	var t = parseInt(TTemps[0] ) * 60 + parseInt(TTemps[1]) + parseInt(TTemps[2])/ 60 ;
     	
     	var dCur = new Date();
     	
-    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , THDepart[0], THDepart[1], THDepart[2], 0 );
+    	var dStart = new Date(dCur.getFullYear(),dCur.getMonth(), dCur.getDate() , parseInt(THDepart[0]), parseInt(THDepart[1]), parseInt(THDepart[2]), 0 );
 		if( $("#pointage_demain").is(":checked") )dStart.setDate(dStart.getDate()+1);
 		var dEnd = addMinutes(dStart, t);
 		
@@ -116,7 +134,6 @@ $(document).ready(function() {
     	
     	var dRest = new Date(dEnd.getTime() - dCur.getTime());
     	
-	
     	$('#pointage_temps_restant,#pointage_temps_restant2').countdown('destroy');
     	$('#pointage_temps_restant').countdown({
     		until: dStart
@@ -137,7 +154,7 @@ $(document).ready(function() {
     	
     	//$('#pointage_temps_restant').html("Temps restant "+dRest.toString().substr(16,8) );
   
-  		regul.indexedDB.getAll('speciale', TSpeciale, 'loadListeSpeciale');  	
+  		regul.indexedDB.getAll('speciale', TSpeciale, loadListeSpeciale);  	
     	;
     });   
 });
@@ -145,7 +162,7 @@ $(document).ready(function() {
 function loadListeSpeciale() {
 	
 	$('#thirdparty-list ul li.speciale').remove();
-	$.each(TThirdParty,function(i, item) {
+	$.each(TSpeciale,function(i, item) {
 		$('ul#listeSpeciale').prepend('<li><a href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
 	});
 	

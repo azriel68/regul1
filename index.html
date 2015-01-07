@@ -98,7 +98,7 @@
         				</div>
     					<div class="ui-block-a">
 							<legend>Temps imparti</legend> 
-							<input type="time" step="1" name="pointage_temps" id="pointage_temps" placeholder="Temps impartis" />
+							<input type="time" step="1" value="00:00:00" name="pointage_temps" id="pointage_temps" placeholder="Temps impartis" />
 						</div>
 				</div>
 				<!-- <div data-role="controlgroup" data-type="horizontal" data-mini="true">
@@ -124,8 +124,18 @@
 				<div id="pointage_temps_restant"></div>
 			
 		  </div>
-		  <div id="tab_ar">
-		      <input type="number" name="pointage_km_parcouru" id="pointage_km_parcouru" value="" placeholder="Distance parcourue en mètres" />
+		  <div id="tab_ar"  class="ui-body-d ui-content">
+				<div class="ui-grid-a">
+					<legend>Distance parcourue</legend>
+					<div class="ui-block-a">
+					      <input type="number" name="pointage_km_parcouru_km" id="pointage_km_parcouru_km" value="" placeholder="En km" />
+					</div> 
+					<div class="ui-block-b">
+					      <input type="number" name="pointage_km_parcouru" id="pointage_km_parcouru" value="" placeholder="En mètres" />
+					</div>				
+				</div>
+
+
 			  <div id="pointage_etat_ar"></div>
 			  <div id="pointage_heure_arrivee2"></div>
 			  <div id="pointage_temps_restant2"></div>
