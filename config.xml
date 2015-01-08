@@ -4,7 +4,7 @@
 	version = "0.0.1" 
 	versionCode = "1">
 
-    <name>RegulOne</name>
+    <name>RegulAuto</name>
     <description>Application de calcul de régulation sur téléphone</description>
     <author href="https://github.com/azriel68" email="azriel68@gmail.com">Azriel68</author>
 
@@ -95,6 +95,6 @@
     <preference name="permissions" value="none"/>
 
 	
-	<gap:plugin name="com.adobe.plugins.gaplugin" />
+	<!-- <gap:plugin name="com.adobe.plugins.gaplugin" /> -->
 	
 </widget>
