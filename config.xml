@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns = "http://www.w3.org/ns/widgets" xmlns:gap = "http://phonegap.com/ns/1.0" 
-	id = "regul1.charette.azriel68" 
+	id = "regulauto.obe1.azriel68" 
 	version = "0.0.1" 
 	versionCode = "1">
 
@@ -55,7 +55,7 @@
 
 	
 
-    <preference name="phonegap-version" value="2.9.0" />
+    <preference name="phonegap-version" value="3.6.3" />
 
 	<!-- orientation with possible values default (both), landscape, or portrait -->
     <preference name="orientation" value="default" />
