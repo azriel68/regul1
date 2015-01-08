@@ -103,30 +103,32 @@
 		    </ul>
 		  </div>
 		  <div id="tab_point" class="ui-body-d ui-content">
-			    <div class="ui-grid-a">
+			    
+			    		<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+						
 			    		<legend>Heure de départ </legend>
-						<div class="ui-block-a">
+						<!-- <div class="ui-block-a">
 							<input type="time" step="1" name="pointage_depart" id="pointage_depart" placeholder="Heure départ" />
-						</div>
-					<!--<select name="pointage_heure_depart" class="hour"></select>
-					<select name="pointage_minute_depart" class="minute"></select>
-					<select name="pointage_seconde_depart" class="seconde"></select>-->
-						<div class="ui-block-b" data-mini="true">
-							<input type="checkbox" name="pointage_demain" id="pointage_demain">
+						</div>-->
+							<select name="pointage_depart_heure" class="hour"></select>
+							<select name="pointage_depart_minute" class="minute"></select>
+							<select name="pointage_depart_seconde" class="seconde"></select>
+								<input type="checkbox" name="pointage_demain" id="pointage_demain">
         					<label for="pointage_demain">Demain</label>
         				</div>
-    					<div class="ui-block-a">
+        				
+    				<!--	<div class="ui-block-a">
 							<legend>Temps imparti</legend> 
 							<input type="time" step="1" value="00:00:00" name="pointage_temps" id="pointage_temps" placeholder="Temps impartis" />
 						</div>
-				</div>
-				<!-- <div data-role="controlgroup" data-type="horizontal" data-mini="true">
+				-->
+				 <div data-role="controlgroup" data-type="horizontal" data-mini="true">
 					<legend>Temps imparti</legend> 
-					<select name="pointage_heure_temps" class="hour"></select>
-					<select name="pointage_minute_temps" class="minute"></select>
-					<select name="pointage_seconde_temps" class="seconde"></select>
+					<select name="pointage_temps_heure" class="hour"></select>
+					<select name="pointage_temps_minute" class="minute"></select>
+					<select name="pointage_temps_seconde" class="seconde"></select>
 					
-				</div> -->
+				</div> 
 					
 				   
 				<div class="ui-grid-a">
