@@ -17,20 +17,19 @@ This file is part of Regulauto.
     Author azriel68@gmail.com
  */
 
-var TSpeciale={};
+var TSpeciale=[];
 var regul = {};
 
 $(document).ready(function() {
 	
-	
-	
     regul.indexedDB.db = null;
-    regul.indexedDB.open();
+    regul.indexedDB.open("regul", function() {
+    	regul.indexedDB.getAll('speciale', TSpeciale, refreshListeSpeciale);
+    });
   
  	$('#config').page({
 		create:function(event,ui) {
 			if(localStorage.interface_url) {  $('#interface_url').val(localStorage.interface_url); }
-	
 		}
 	});
 	
@@ -51,8 +50,6 @@ $(document).ready(function() {
     	$("#pointage_km_parcouru").val( $(this).val() * 1000 );
     	$("#pointage_km_parcouru").change();
     });
-      
-      
       
     $("#pointage_km_parcouru").change(function() {
     	
@@ -121,6 +118,21 @@ $(document).ready(function() {
     	
     });
       
+    $('input[name=add-speciale]').click(function(){
+    	var newId = regul.indexedDB.getNewId('speciale');
+    	
+    	item={
+    		id:regul.indexedDB.getNewId('speciale')
+    		,label:$('input[name=new-speciale-name]').val()
+    		,TCadence:[]
+    	};
+    	
+    	TSpeciale.push(item);
+    	
+    	regul.indexedDB.addItem('speciale', item, refreshListeSpeciale);
+    	
+    });
+      
     $('input[name=pointage_depart],#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
     	
     	
@@ -161,10 +173,6 @@ $(document).ready(function() {
 		
 	
     	
-    	//$('#pointage_temps_restant').html("Temps restant "+dRest.toString().substr(16,8) );
-  
-  		regul.indexedDB.getAll('speciale', TSpeciale, loadListeSpeciale);  	
-    	;
     });   
 });
 function getTemps(inputName) {
@@ -183,11 +191,11 @@ function getTemps(inputName) {
 	
 	return t;	
 }
-function loadListeSpeciale() {
+function refreshListeSpeciale() {
 	
-	$('#thirdparty-list ul li.speciale').remove();
+	$('ul#listeSpeciale li.speciale').remove();
 	$.each(TSpeciale,function(i, item) {
-		$('ul#listeSpeciale').prepend('<li><a href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
+		$('ul#listeSpeciale').prepend('<li class="speciale"><a  href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
 	});
 	
 	if ($('ul#listeSpeciale').hasClass('ui-listview')) {

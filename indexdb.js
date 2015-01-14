@@ -20,14 +20,15 @@ This file is part of Regulauto.
 
 regul.indexedDB = {};
 
-regul.indexedDB.open = function() {
+regul.indexedDB.open = function(dbname, callbackfct) {
 	
   var version = 1;
-  var request = indexedDB.open("regul", version);
+  var request = indexedDB.open(dbname, version);
 
   request.onsuccess = function(e) {
   	regul.indexedDB.db = e.target.result;
-   
+    callbackfct();
+    
   };
  
   request.onupgradeneeded = function (evt) { 
@@ -47,11 +48,10 @@ regul.indexedDB.open = function() {
 
 
 regul.indexedDB.getAll= function(storename, TArray, callback) {
-  
-  var db = regul.indexedDB.db;
-  var trans = db.transaction(storename, "readwrite");
+  var trans = regul.indexedDB.db.transaction(storename, IDBTransaction.READ_ONLY);
   var store = trans.objectStore(storename);
-
+   
+  TArray.splice(0,TArray.length);
   // Get everything in the store;
   var keyRange = IDBKeyRange.lowerBound(0);
   var cursorRequest = store.openCursor(keyRange);
@@ -59,6 +59,7 @@ regul.indexedDB.getAll= function(storename, TArray, callback) {
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
     if(result) {
+    	
 		TArray.push(result.value);
 		result.continue();
     	
@@ -79,15 +80,23 @@ regul.indexedDB.getAll= function(storename, TArray, callback) {
   cursorRequest.onerror = regul.indexedDB.onerror;
 };
 
-regul.indexedDB.addItem = function(storename,item) {
-  var db = regul.indexedDB.db;
-  var trans = db.transaction(storename, "readwrite");
-  var store = trans.objectStore(storename);
+regul.indexedDB.getNewId =function(storename) {
+	return storename+'-'+Math.floor((1 + Math.random()) * 0x100000000)
+               .toString(16)
+               .substring(1)
+               +'-'+Math.floor((1 + Math.random()) * 0x100000000)
+               .toString(16)
+               .substring(1);
+};
+
+regul.indexedDB.addItem = function(storename,item, callbackfct) {
+  var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+  var store = trans.objectStore([storename]);
   store.delete(item.id);
   var request = store.put(item);
 
   trans.oncomplete = function(e) {
-   
+   	callbackfct(item.id);
   };
 
   request.onerror = function(e) {

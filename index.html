@@ -45,6 +45,18 @@
 
 
 <div id="home" data-role="page">
+	<div data-display="overlay" data-position="right" data-role="panel" id="new-speciale"  data-theme="b">
+    
+    	<legend>Nom de votre spéciale</legend>
+    
+    	<input type="text" name="new-speciale-name"  data-theme="a" />
+    
+    	<input type="button" name="add-speciale" value="Ajouter"  data-theme="a" />
+    
+    	<a data-rel="close" data-role="button"  data-theme="b">Fermer</a>
+    
+	</div><!-- /panel -->
+	
 	<div data-role="header">
 		<h1>RegulOne</h1>
 	</div><!-- /header -->
@@ -52,7 +64,7 @@
 		<h3>Spéciales programmées</h3>
 		<ul id="listeSpeciale" data-role="listview" data-inset="false">
 				
-			<li><a href="#speciale">Nouvelle spéciale</a></li>	
+			<li data-icon="plus" data-theme="b"><a href="#new-speciale">Nouvelle spéciale</a></li>	
 			
 		</ul>
 		
@@ -63,7 +75,7 @@
 				<li><a href="#pointage">P/A/R</a></li>
 				<li><a href="#moyenne">Moyenne</a></li>
 				<li><a href="#etalonnage">Etalonnage</a></li>
-				<li><a href="#cadenceur">Cadenceur</a></li>
+				<!-- <li><a href="#cadenceur">Cadenceur</a></li> -->
 				<li><a href="#config">Options</a></li>
 				
 			</ul>
@@ -232,6 +244,35 @@
 	<div data-role="header">
 		<a href="#home" data-icon="back">Accueil</a>
 		<h1>Etalonnage</h1>
+	</div><!-- /header -->
+	
+	<div data-role="content">	
+				<input type="number" name="indice" value="" placeholder="Indice tripmaster" />
+				<input type="number" name="zone" value="" placeholder="Longueur zone d'étalonnage en mètre" />
+				<input type="number" name="mesure" value="" placeholder="Longueur mesurée en mètre" />
+				<div id="etalonnage_indice"></div>
+			  				    
+	</div>
+	<div data-role="footer" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="#pointage">P/A/R</a></li>
+				<li><a href="#moyenne">Moyenne</a></li>
+				<li><a href="#etalonnage" class="ui-btn-active ui-state-persist">Etalonnage</a></li>
+				<li><a href="#cadenceur">Cadenceur</a></li>
+				
+			</ul>
+		</div><!-- /navbar -->
+
+	</div><!-- /footer -->
+	
+</div>
+
+<div id="speciale" data-role="page">
+
+	<div data-role="header">
+		<a href="#home" data-icon="back">Accueil</a>
+		<h1 id="speciale-name">Spéciale</h1>
 	</div><!-- /header -->
 	
 	<div data-role="content">	
