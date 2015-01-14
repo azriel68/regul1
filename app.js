@@ -118,22 +118,7 @@ $(document).ready(function() {
     	
     });
       
-    $('input[name=add-speciale]').click(function(){
-    	var newId = regul.indexedDB.getNewId('speciale');
-    	
-    	item={
-    		id:regul.indexedDB.getNewId('speciale')
-    		,label:$('input[name=new-speciale-name]').val()
-    		,TCadence:[]
-    	};
-    	
-    	TSpeciale.push(item);
-    	
-    	regul.indexedDB.addItem('speciale', item, refreshListeSpeciale);
-    	
-    });
-      
-    $('input[name=pointage_depart],#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
+     $('input[name=pointage_depart],#pointage select.hour,#pointage select.minute,#pointage select.seconde,input[name=pointage_temps],input[name=pointage_distance],#pointage_demain').change(function() {
     	
     	
     	var m = $('input[name=pointage_distance]').val();
@@ -173,8 +158,59 @@ $(document).ready(function() {
 		
 	
     	
-    });   
+    });  
+    
+    $('input[name=delete-speciale]').click(function() {
+    	
+    	if(window.confirm("Attention, vous allez supprimer cette spéciale, etes-vous sûr ?")) {
+    		 var id = $("#speciale").attr('itemid');
+    		
+    		 $('ul#listeSpeciale li.speciale[itemid='+id+']').remove();
+    		 regul.indexedDB.deleteItem('speciale', id);
+    		 $.mobile.changePage('#home');
+    	}
+    	
+    });
+     
+    $('input[name=add-etape]').click(function(){
+    	
+    	regul.indexedDB.getItem( 'speciale', id, addEtape );
+    	
+    });
+    
+    $('input[name=add-speciale]').click(function(){
+    	var newId = regul.indexedDB.getNewId('speciale');
+    	
+    	item={
+    		id:regul.indexedDB.getNewId('speciale')
+    		,label:$('input[name=new-speciale-name]').val()
+    		,TCadence:[]
+    	};
+    	
+    	TSpeciale.push(item);
+    	
+    	regul.indexedDB.addItem('speciale', item, refreshListeSpeciale);
+    	
+    });
+      
+    
+     
 });
+
+function addEtape(item) {
+	
+	var etape={
+		moyenne:$('#speciale input[name=moyenne]').val()
+		,distance:$('#speciale input[name=zone]').val()
+	};
+	
+	item.TCadence.push(etape);
+	
+	regul.indexedDB.addItem('speciale',item,refreshListeCadence);
+	
+	
+}
+
 function getTemps(inputName) {
 	
 	if($('input[name='+inputName+']').length>0) {
@@ -195,7 +231,7 @@ function refreshListeSpeciale() {
 	
 	$('ul#listeSpeciale li.speciale').remove();
 	$.each(TSpeciale,function(i, item) {
-		$('ul#listeSpeciale').prepend('<li class="speciale"><a  href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
+		$('ul#listeSpeciale').prepend('<li class="speciale" itemid="'+item.id+'"><a  href="#speciale" itemid="'+item.id+'">'+item.label+'</a></li>');	
 	});
 	
 	if ($('ul#listeSpeciale').hasClass('ui-listview')) {
@@ -204,8 +240,39 @@ function refreshListeSpeciale() {
 	    $('ul#listeSpeciale').listview();
 	}
 	
+	$('ul#listeSpeciale li.speciale a').click(function() {
+		
+		id = $(this).attr('itemid');
+		
+		$('#speciale').attr('itemid', id);
+		
+		regul.indexedDB.getItem( 'speciale', id, refreshListeCadence );
+		
+		
+	});
 	
+}
+function refreshListeCadence(item) {
 	
+	$('#speciale #speciale-name').html(item.label);
+	
+	var $ul = $('ul#cadence-list');
+	
+	$ul.find('li.cadence').remove();
+	$.each(item.TCadence,function(i, item) {
+		$ul.append('<li class="cadence" cadenceid="'+i+'"><a href="#cadenceur" itemid="'+item.id+'" cadenceid="'+i+'">'+item.moyenne+'k/m sur '+(item.distance/1000)+'km</a></li>');	
+	});
+	
+	if ($ul.hasClass('ui-listview')) {
+		    $ul.listview('refresh');
+	} else {
+	    $ul.listview();
+	}
+	/*
+	$ul.find('li.speciale a').click(function() {
+		$('#speciale').attr('itemid', $(this).attr('itemid'));
+	});
+	*/
 }
 
 function dateDiff(date1, date2){

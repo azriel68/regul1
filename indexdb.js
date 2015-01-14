@@ -96,12 +96,24 @@ regul.indexedDB.addItem = function(storename,item, callbackfct) {
   var request = store.put(item);
 
   trans.oncomplete = function(e) {
-   	callbackfct(item.id);
+   	callbackfct(item);
   };
 
   request.onerror = function(e) {
     console.log(e.value);
   };
+};
+
+regul.indexedDB.deleteItem = function (storename, id, callbackfct) {
+	var trans = regul.indexedDB.db.transaction(storename, "readwrite");
+	var store = trans.objectStore([storename]);
+	store.delete(id);
+	
+	trans.onsuccess = function(e) {
+	   	if(callbackfct) callbackfct();
+	};
+	
+	
 };
 
 regul.indexedDB.getItem = function (storename, id, callbackfct) {

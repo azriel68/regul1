@@ -276,11 +276,22 @@
 	</div><!-- /header -->
 	
 	<div data-role="content">	
-				<input type="number" name="indice" value="" placeholder="Indice tripmaster" />
-				<input type="number" name="zone" value="" placeholder="Longueur zone d'étalonnage en mètre" />
-				<input type="number" name="mesure" value="" placeholder="Longueur mesurée en mètre" />
-				<div id="etalonnage_indice"></div>
-			  				    
+				<ul id="cadence-list">
+					
+				</ul>
+				<br />
+				<input type="number" name="moyenne" value="" placeholder="Moyenne a respecter en km/h" />
+				<div class="ui-grid-a">
+					<legend>Longueur de la zone</legend>
+					<div class="ui-block-a">
+						<input type="number" name="zone_km" value="" placeholder=" en km" />
+					</div>
+					<div class="ui-block-b">
+						<input type="number" name="zone" value="" placeholder="en mètre" />
+					</div>
+				</div>
+				<input type="button" name="add-etape" value="Ajouter l'étape" /> 
+			  	<input type="button" name="delete-speciale" value="Supprimer la spéciale" data-icon="delete" data-theme="b" /> 			    
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<div data-role="navbar">
