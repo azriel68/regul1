@@ -19,6 +19,8 @@ This file is part of Regulauto.
 
 var TSpeciale=[];
 var regul = {};
+var distanceCadenceur = 0;
+var moyenneCadenceur = 0;
 
 $(document).ready(function() {
 	
@@ -259,8 +261,8 @@ function refreshListeCadence(item) {
 	var $ul = $('ul#cadence-list');
 	
 	$ul.find('li.cadence').remove();
-	$.each(item.TCadence,function(i, item) {
-		$ul.append('<li class="cadence" cadenceid="'+i+'"><a href="#cadenceur" itemid="'+item.id+'" cadenceid="'+i+'">'+item.moyenne+'k/m sur '+(item.distance/1000)+'km</a></li>');	
+	$.each(item.TCadence,function(i, cadence) {
+		$ul.append('<li class="cadence" cadenceid="'+i+'" data-icon="delete"><a class="cadence" href="#cadenceur" itemid="'+item.id+'" cadenceid="'+i+'">'+cadence.moyenne+'k/m sur '+(cadence.distance/1000)+'km</a><a class="delete" href="#" itemid="'+item.id+'" cadenceid="'+i+'">Supprimer</a></li>');	
 	});
 	
 	if ($ul.hasClass('ui-listview')) {
@@ -268,11 +270,62 @@ function refreshListeCadence(item) {
 	} else {
 	    $ul.listview();
 	}
-	/*
-	$ul.find('li.speciale a').click(function() {
-		$('#speciale').attr('itemid', $(this).attr('itemid'));
+	
+	$ul.find('li.cadence a.cadence').click(function() {
+		itemid = $(this).attr('itemid');
+		cadenceid=$(this).attr('cadenceid');
+		
+		$('#cadenceur').attr('itemid', itemid);
+		$('#cadenceur').attr('cadenceid', cadenceid);
+		
+		regul.indexedDB.getItem('speciale', itemid, function(item) {
+			cadence = item.TCadence[cadenceid];
+			
+			$('#cadenceur div[rel=vitesse]').html(cadence.moyenne+'km/h');
+			
+			dStart = new Date();
+			
+			distanceCadenceur = 0;
+			moyenneCadenceur = cadence.moyenne;
+			
+			$('#cadenceur div[rel=time]').countdown({
+	    		since: dStart
+	    		, compact: true
+	    		, description: ''
+	    		,onTick: updateDistance
+    		});
+    		
+    		$('#cadenceur div[rel=time]').countdown('pause');
+			
+		});
+		
 	});
-	*/
+	
+	$ul.find('li.cadence a.delete').click(function() {
+		
+		itemid = $(this).attr('itemid');
+		cadenceid = $(this).attr('cadenceid');
+		
+		if(window.confirm("Supprimer cette cadence ?")) {
+			
+			regul.indexedDB.getItem('speciale', itemid, function(item) {
+				item.TCadence.splice(cadenceid,1);
+				
+				regul.indexedDB.addItem('speciale', item, refreshListeCadence(item));
+			});
+			
+		}
+		
+	});
+	
+}
+
+function updateDistance(periods) {
+	
+	km_per_sec = moyenneCadenceur / 3600; 
+	distanceCadenceur = distanceCadenceur+km_per_sec;
+			
+	$('#cadenceur div[rel=distance]').html(Math.round(distanceCadenceur*100) / 100);
 }
 
 function dateDiff(date1, date2){
