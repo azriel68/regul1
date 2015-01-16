@@ -322,10 +322,17 @@ function refreshListeCadence(item) {
 
 function updateDistance(periods) {
 	
-	km_per_sec = moyenneCadenceur / 3600; 
-	distanceCadenceur = distanceCadenceur+km_per_sec;
-			
-	$('#cadenceur div[rel=distance]').html(Math.round(distanceCadenceur*100) / 100);
+	var sum = periods.reduce(function(pv, cv) { return pv + cv; }, 0);
+	
+	if(sum>0) {
+		km_per_sec = moyenneCadenceur / 3600; 
+		distanceCadenceur = distanceCadenceur+km_per_sec;
+				
+		$('#cadenceur div[rel=distance]').html(Math.round(distanceCadenceur*100) / 100);
+		
+		document.getElementById('audiotick').play();
+	}
+	
 }
 
 function dateDiff(date1, date2){
