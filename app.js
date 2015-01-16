@@ -278,7 +278,31 @@ function refreshListeCadence(item) {
 		$('#cadenceur').attr('itemid', itemid);
 		$('#cadenceur').attr('cadenceid', cadenceid);
 		
-		regul.indexedDB.getItem('speciale', itemid, function(item) {
+		setCadence(itemid, cadenceid);
+	});
+	
+	$ul.find('li.cadence a.delete').click(function() {
+		
+		itemid = $(this).attr('itemid');
+		cadenceid = $(this).attr('cadenceid');
+		
+		if(window.confirm("Supprimer cette cadence ?")) {
+			
+			regul.indexedDB.getItem('speciale', itemid, function(item) {
+				item.TCadence.splice(cadenceid,1);
+				
+				regul.indexedDB.addItem('speciale', item, refreshListeCadence(item));
+			});
+			
+		}
+		
+	});
+	
+}
+
+function setCadence(itemid, candenceid) {
+	
+	regul.indexedDB.getItem('speciale', itemid, function(item) {
 			cadence = item.TCadence[cadenceid];
 			
 			$('#cadenceur div[rel=vitesse]').html(cadence.moyenne+'km/h');
@@ -299,25 +323,6 @@ function refreshListeCadence(item) {
 			
 		});
 		
-	});
-	
-	$ul.find('li.cadence a.delete').click(function() {
-		
-		itemid = $(this).attr('itemid');
-		cadenceid = $(this).attr('cadenceid');
-		
-		if(window.confirm("Supprimer cette cadence ?")) {
-			
-			regul.indexedDB.getItem('speciale', itemid, function(item) {
-				item.TCadence.splice(cadenceid,1);
-				
-				regul.indexedDB.addItem('speciale', item, refreshListeCadence(item));
-			});
-			
-		}
-		
-	});
-	
 }
 
 function updateDistance(periods) {

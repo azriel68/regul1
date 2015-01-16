@@ -290,7 +290,7 @@
 						<input type="number" name="zone" value="" placeholder="en mètre" />
 					</div>
 				</div>
-				<input type="button" name="add-etape" value="Ajouter l'étape" /> 
+				<input type="button" name="add-etape" value="Ajouter la cadence" /> 
 			  	<input type="button" name="delete-speciale" value="Supprimer la spéciale" data-icon="delete" data-theme="b" /> 			    
 	</div>
 	<div data-role="footer" data-position="fixed">
@@ -326,7 +326,7 @@
 						<input type="button" name="start-etape" value="Démarre l'étape" onclick="$('#cadenceur div[rel=time]').countdown('resume');" /> 
 					</div>
 					<div class="ui-block-b">
-						<input type="button" name="next-etape" value="Etape suivante" data-theme="e" /> 
+						<input type="button" name="next-etape" value="Etape suivante" data-theme="e" onclick="setCadence($('#cadenceur').attr('itemid'), $('#cadenceur').attr('cadenceid') +1);"  /> 
 					</div>	 
 				</div>   
 	</div>
