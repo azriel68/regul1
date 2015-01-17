@@ -195,7 +195,14 @@ $(document).ready(function() {
     	
     });
       
-    
+    $('#cadenceur input[name=start-etape]').click(function() {
+    	$('#cadenceur div[rel=time]').countdown('resume');
+    });
+     
+    $('#cadenceur input[name=next-etape]').click(function() {
+    	setCadence($('#cadenceur').attr('itemid'), parseInt( $('#cadenceur').attr('cadenceid') ) +1, true);
+    });
+     
      
 });
 
@@ -300,10 +307,14 @@ function refreshListeCadence(item) {
 	
 }
 
-function setCadence(itemid, candenceid) {
+function setCadence(itemid, cadenceid, noblockcounter) {
 	
 	regul.indexedDB.getItem('speciale', itemid, function(item) {
 			cadence = item.TCadence[cadenceid];
+			
+			if(! (cadenceid+1) in item.TCadence){
+				$('#cadenceur input[name=next-etape]').hide();
+			}
 			
 			$('#cadenceur div[rel=vitesse]').html(cadence.moyenne+'km/h');
 			
@@ -312,6 +323,8 @@ function setCadence(itemid, candenceid) {
 			distanceCadenceur = 0;
 			moyenneCadenceur = cadence.moyenne;
 			
+			$('#cadenceur div[rel=time]').countdown('destroy');
+			
 			$('#cadenceur div[rel=time]').countdown({
 	    		since: dStart
 	    		, compact: true
@@ -319,7 +332,10 @@ function setCadence(itemid, candenceid) {
 	    		,onTick: updateDistance
     		});
     		
-    		$('#cadenceur div[rel=time]').countdown('pause');
+    		if(noblockcounter!=true) {
+    			$('#cadenceur div[rel=time]').countdown('pause');	
+    		}
+    		
 			
 		});
 		
@@ -333,7 +349,7 @@ function updateDistance(periods) {
 		km_per_sec = moyenneCadenceur / 3600; 
 		distanceCadenceur = distanceCadenceur+km_per_sec;
 				
-		$('#cadenceur div[rel=distance]').html(Math.round(distanceCadenceur*100) / 100);
+		$('#cadenceur div[rel=distance]').html((Math.round(distanceCadenceur*100) / 100)+"km");
 		
 		document.getElementById('audiotick').play();
 	}
